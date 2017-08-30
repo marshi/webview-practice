@@ -1,5 +1,7 @@
 package com.example.marshi.coordinatorlayouttext;
 
+import com.github.ksoichiro.android.observablescrollview.ObservableWebView;
+
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +28,9 @@ public class ScrollingActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        ObservableWebView webView = (ObservableWebView) findViewById(R.id.web_view);
+        webView.loadUrl("https://www.google.co.jp");
     }
 
     @Override
