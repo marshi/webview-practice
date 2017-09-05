@@ -1,14 +1,30 @@
 package com.example.marshi.coordinatorlayouttext;
 
-import com.github.ksoichiro.android.observablescrollview.ObservableWebView;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.TextureView;
 import android.view.View;
 
 public class ScrollingActivity extends AppCompatActivity {
@@ -29,8 +45,26 @@ public class ScrollingActivity extends AppCompatActivity {
             }
         });
 
-        ObservableWebView webView = (ObservableWebView) findViewById(R.id.web_view);
-        webView.loadUrl("https://www.google.co.jp");
+
+        TextureView video = (TextureView) findViewById(R.id.video);
+
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        DataSource.Factory datasourceFactory = new DefaultHttpDataSourceFactory(
+                Util.getUserAgent(this, "App")
+        );
+        Uri uri = Uri.parse("https://tungsten.aaplimg.com/VOD/bipbop_adv_example_v2/master.m3u8");
+        MediaSource mediaSource = new HlsMediaSource(uri, datasourceFactory, null, null);
+        TrackSelection.Factory videoFactory = new AdaptiveVideoTrackSelection.Factory(bandwidthMeter);
+        TrackSelector trackSelector = new DefaultTrackSelector(videoFactory);
+        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, new DefaultLoadControl());
+        player.setVideoTextureView(video);
+        player.prepare(mediaSource);
+        player.setPlayWhenReady(true);
+
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), this);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(adapter);
+
     }
 
     @Override
