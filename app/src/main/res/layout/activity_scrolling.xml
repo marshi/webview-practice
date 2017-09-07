@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.marshi.coordinatorlayouttext.ScrollingActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <com.example.marshi.coordinatorlayouttext.SuperAppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
@@ -39,9 +39,10 @@
                 />
 
         </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
+    </com.example.marshi.coordinatorlayouttext.SuperAppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <com.example.marshi.coordinatorlayouttext.SuperNestedScrollView
+        android:id="@+id/nested"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -51,23 +52,15 @@
         tools:context="com.example.marshi.coordinatorlayouttext.ScrollingActivity"
         android:fillViewport="true"
         >
-        <RelativeLayout
+        <com.example.marshi.coordinatorlayouttext.SuperViewPager
+            android:id="@+id/viewpager"
+            android:background="@color/colorPrimaryDark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager"
-                android:background="@color/colorPrimaryDark"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+            app:layout_anchor="@id/app_bar"
+            />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="aiueo"
-                />
-        </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </com.example.marshi.coordinatorlayouttext.SuperNestedScrollView>
 
 
     <android.support.design.widget.FloatingActionButton
@@ -78,12 +71,5 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@android:drawable/ic_dialog_email"/>
-
-    <com.example.marshi.coordinatorlayouttext.CustomButton
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        app:layout_anchor="@id/app_bar"
-        android:background="@color/colorAccent"
-        />
 
 </android.support.design.widget.CoordinatorLayout>

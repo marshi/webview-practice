@@ -19,9 +19,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.TextureView;
@@ -62,8 +63,17 @@ public class ScrollingActivity extends AppCompatActivity {
         player.setPlayWhenReady(true);
 
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), this);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        SuperViewPager viewPager = (SuperViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
+        Log.i("className", ""+viewPager.getParent().getParent().getClass().getSimpleName());
+
+        NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.nested);
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                Log.i("nested", "onScrollChange");
+            }
+        });
 
     }
 

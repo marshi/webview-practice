@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 
 public class WebViewFragment extends Fragment {
 
@@ -26,9 +25,11 @@ public class WebViewFragment extends Fragment {
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_web_view, container, false);
-        WebView webView = (WebView) view.findViewById(R.id.web_view);
+        SuperObservableWebView webView = (SuperObservableWebView) view.findViewById(R.id.web_view);
         webView.loadUrl("https://m.yahoo.co.jp/");
         return view;
     }
+
+
 
 }
