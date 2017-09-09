@@ -34,9 +34,9 @@ public class SuperNestedScrollView extends NestedScrollView {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         Log.i("nestedscroll", "start dispatch " + ev.getActionMasked());
-        if (isDisallowInterceptTouchEvent) {
-            requestDisallowInterceptTouchEvent(true);
-        }
+//        if (isDisallowInterceptTouchEvent) {
+//            requestDisallowInterceptTouchEvent(true);
+//        }
         boolean b = super.dispatchTouchEvent(ev);
         Log.i("nestedscroll", "end dispatch " + b + " " + ev.getActionMasked());
         return b;
