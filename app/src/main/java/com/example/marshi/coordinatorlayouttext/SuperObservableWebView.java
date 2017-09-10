@@ -5,29 +5,37 @@ import com.github.ksoichiro.android.observablescrollview.ObservableWebView;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.annotation.Size;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.view.NestedScrollingChildHelper;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 
 public class SuperObservableWebView extends ObservableWebView implements NestedScrollingChild {
 
-    private final NestedScrollingChildHelper childHelper;
+    private NestedScrollingChildHelper childHelper;
+
+    private int lastTouchY;
+    private int initialTouchY;
+    private int touchSlop;
+    private boolean isBeingDragged;
 
     public SuperObservableWebView(Context context) {
         super(context);
-        childHelper = new NestedScrollingChildHelper(this);
+        init();
     }
 
     public SuperObservableWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        childHelper = new NestedScrollingChildHelper(this);
+        init();
     }
 
     public SuperObservableWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        childHelper = new NestedScrollingChildHelper(this);
+        init();
     }
 
     @Override
@@ -40,10 +48,29 @@ public class SuperObservableWebView extends ObservableWebView implements NestedS
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        Log.i("webview", "start intercept " + ev.getActionMasked());
-        boolean b = super.onInterceptTouchEvent(ev);
-        Log.i("webview", "end intercept " + b + " " + ev.getActionMasked());
-        return b;
+        final int action = MotionEventCompat.getActionMasked(ev);
+        switch(action) {
+            case MotionEvent.ACTION_DOWN:
+                initialTouchY = lastTouchY = (int) ev.getY();
+                startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                final int y = (int)ev.getY();
+                final int yDiff = Math.abs(y - lastTouchY);
+                if (yDiff > touchSlop) {
+                    lastTouchY = y;
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                stopNestedScroll();
+                break;
+        }
+//        Log.i("webview", "start intercept " + ev.getActionMasked());
+//        boolean b = super.onInterceptTouchEvent(ev);
+//        Log.i("webview", "end intercept " + b + " " + ev.getActionMasked());
+//        return b;
+        return super.onInterceptTouchEvent(ev);
     }
 
     @Override
@@ -52,6 +79,14 @@ public class SuperObservableWebView extends ObservableWebView implements NestedS
         boolean b = super.onTouchEvent(ev);
         Log.i("viewpager", "touch in setontouch");
         return b;
+    }
+
+    private void init() {
+        this.childHelper = new NestedScrollingChildHelper(this);
+        ViewConfiguration viewConfiguration = ViewConfiguration.get(getContext());
+        this.touchSlop = viewConfiguration.getScaledTouchSlop();
+        setNestedScrollingEnabled(true);
+
     }
 
     //NestedScrollingChild
