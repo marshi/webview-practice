@@ -41,27 +41,14 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </com.example.marshi.coordinatorlayouttext.SuperAppBarLayout>
 
-    <com.example.marshi.coordinatorlayouttext.SuperNestedScrollView
-        android:id="@+id/nested"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <com.example.marshi.coordinatorlayouttext.SuperViewPager
+        android:id="@+id/viewpager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.example.marshi.coordinatorlayouttext.ScrollingActivity"
-        android:fillViewport="true"
-        >
-        <com.example.marshi.coordinatorlayouttext.SuperViewPager
-            android:id="@+id/viewpager"
-            android:background="@color/colorPrimaryDark"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_anchor="@id/app_bar"
-            />
-
-    </com.example.marshi.coordinatorlayouttext.SuperNestedScrollView>
-
+        app:layout_anchor="@id/app_bar"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
