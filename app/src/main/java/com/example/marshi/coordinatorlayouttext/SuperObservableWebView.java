@@ -23,6 +23,10 @@ public class SuperObservableWebView extends ObservableWebView implements NestedS
     private int touchSlop;
     private boolean isBeingDragged;
 
+    private int nestedYOffset;
+    private final int[] scrollConsumed = new int[2];
+    private final int[] scrollOffset = new int[2];
+
     public SuperObservableWebView(Context context) {
         super(context);
         init();
@@ -53,6 +57,7 @@ public class SuperObservableWebView extends ObservableWebView implements NestedS
             case MotionEvent.ACTION_DOWN:
                 initialTouchY = lastTouchY = (int) ev.getY();
                 startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
+                isBeingDragged = true;
                 break;
             case MotionEvent.ACTION_MOVE:
                 final int y = (int)ev.getY();
@@ -75,10 +80,47 @@ public class SuperObservableWebView extends ObservableWebView implements NestedS
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        Log.i("webview", "start touch " + ev.getActionMasked());
-        boolean b = super.onTouchEvent(ev);
-        Log.i("viewpager", "touch in setontouch");
-        return b;
+        MotionEvent obtainedEv = MotionEvent.obtain(ev);
+        final int actionMasked = MotionEventCompat.getActionMasked(ev);
+        if (actionMasked == MotionEvent.ACTION_DOWN) {
+            nestedYOffset = 0;
+        }
+        obtainedEv.offsetLocation(0, nestedYOffset);
+        switch(actionMasked) {
+            case MotionEvent.ACTION_DOWN:
+                initialTouchY = lastTouchY = (int)ev.getY();
+                startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                final int y = (int)ev.getY();
+                int yDiff = lastTouchY - y;
+                if (dispatchNestedPreScroll(0, yDiff, scrollConsumed, scrollOffset)) {
+                    yDiff -= scrollConsumed[1];
+                    obtainedEv.offsetLocation(0, scrollOffset[1]);
+                }
+                if (isBeingDragged) {
+                    lastTouchY = y - scrollOffset[1];
+                    //ここのconsumedYには何を渡せば？
+                    if(dispatchNestedScroll(0, 0, 0, yDiff, scrollOffset)) {
+                        lastTouchY -= scrollOffset[1];
+                        obtainedEv.offsetLocation(0, scrollOffset[1]);
+                        nestedYOffset += scrollOffset[1];
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                isBeingDragged = false;
+                stopNestedScroll();
+                break;
+        }
+        obtainedEv.recycle();
+        return super.onTouchEvent(ev);
+//        Log.i("webview", "start touch " + ev.getActionMasked());
+//        boolean b = super.onTouchEvent(ev);
+//        Log.i("viewpager", "touch in setontouch");
+//        return b;
+
     }
 
     private void init() {

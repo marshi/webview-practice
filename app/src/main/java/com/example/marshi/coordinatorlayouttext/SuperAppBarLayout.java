@@ -53,11 +53,11 @@ public class SuperAppBarLayout extends AppBarLayout {
             Log.i("behavior", "onNestedScroll " + toolbarBottomY + " " + nestedScrollViewTopY + appbarBottomY);
             if (nestedScrollViewTopY <= toolbarBottomY) {
                 Log.i("behavior", "top");
-                SuperNestedScrollView superNestedScrollView = (SuperNestedScrollView)target;
+//                SuperNestedScrollView superNestedScrollView = (SuperNestedScrollView)target;
 //                superNestedScrollView.setDisallowInterceptTouchEvent(true);
             } else if (appbarBottomY <= nestedScrollViewTopY) {
                 Log.i("behavior", "bottom");
-                SuperNestedScrollView superNestedScrollView = (SuperNestedScrollView)target;
+//                SuperNestedScrollView superNestedScrollView = (SuperNestedScrollView)target;
 //                superNestedScrollView.setDisallowInterceptTouchEvent(false);
             }
 
