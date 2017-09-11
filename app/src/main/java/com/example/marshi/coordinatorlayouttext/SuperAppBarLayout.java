@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.view.View;
 @CoordinatorLayout.DefaultBehavior(SuperAppBarLayout.SuperBehavior.class)
 public class SuperAppBarLayout extends AppBarLayout {
 
+
     public SuperAppBarLayout(Context context) {
         super(context);
     }
@@ -23,6 +25,8 @@ public class SuperAppBarLayout extends AppBarLayout {
     }
 
     public static class SuperBehavior extends AppBarLayout.Behavior {
+
+        private boolean isToolbarCollapsed;
 
         @Override
         public boolean onDependentViewChanged(CoordinatorLayout parent, AppBarLayout child,
@@ -54,6 +58,30 @@ public class SuperAppBarLayout extends AppBarLayout {
         public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child,
                 View target, int dx, int dy, int[] consumed) {
             Log.i("behavior", "onNestedPreScroll");
+            Toolbar toolbar = (Toolbar) child.findViewById(R.id.toolbar);
+            int[] toolbarLocation = new int[2];
+            toolbar.getLocationOnScreen(toolbarLocation);
+            int[] targetLocation = new int[2];
+            target.getLocationOnScreen(targetLocation);
+            int toolbarBottomY = toolbarLocation[1] + toolbar.getHeight();
+            int[] appbarLocation = new int[2];
+            int nestedScrollViewTopY = targetLocation[1];
+            child.getLocationOnScreen(appbarLocation);
+
+            SuperObservableWebView superObservableWebView = (SuperObservableWebView)target;
+            if (nestedScrollViewTopY <= toolbarBottomY) {
+                Log.i("behavior", "top");
+                if (isToolbarCollapsed) {
+                    superObservableWebView.onChangeCollapseToolbar(true, dy);
+                }
+                this.isToolbarCollapsed = true;
+            } else {
+                Log.i("behavior", "not top");
+                if (!isToolbarCollapsed) {
+                    superObservableWebView.onChangeCollapseToolbar(false, dy);
+                }
+                this.isToolbarCollapsed = false;
+            }
             super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
         }
 

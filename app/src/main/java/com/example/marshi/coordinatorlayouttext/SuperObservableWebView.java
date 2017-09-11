@@ -14,18 +14,21 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
+import java.text.MessageFormat;
+
 public class SuperObservableWebView extends ObservableWebView implements NestedScrollingChild {
 
     private NestedScrollingChildHelper childHelper;
 
     private int lastTouchY;
-    private int initialTouchY;
     private int touchSlop;
     private boolean isBeingDragged;
 
     private int nestedYOffset;
     private final int[] scrollConsumed = new int[2];
     private final int[] scrollOffset = new int[2];
+
+    private boolean isScrollingWebView;
 
     public SuperObservableWebView(Context context) {
         super(context);
@@ -57,7 +60,7 @@ public class SuperObservableWebView extends ObservableWebView implements NestedS
         final int action = MotionEventCompat.getActionMasked(ev);
         switch(action) {
             case MotionEvent.ACTION_DOWN:
-                initialTouchY = lastTouchY = (int) ev.getY();
+                lastTouchY = (int) ev.getY();
                 startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
                 isBeingDragged = true;
                 break;
@@ -90,20 +93,29 @@ public class SuperObservableWebView extends ObservableWebView implements NestedS
         obtainedEv.offsetLocation(0, nestedYOffset);
         switch(actionMasked) {
             case MotionEvent.ACTION_DOWN:
-                initialTouchY = lastTouchY = (int)ev.getY();
+                lastTouchY = (int)ev.getY();
                 startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
                 break;
             case MotionEvent.ACTION_MOVE:
                 final int y = (int)ev.getY();
                 int yDiff = lastTouchY - y;
+                int scrollY = getScrollY();
+                Log.i("webview", MessageFormat.format("ydiff = {0}", yDiff));
                 if (dispatchNestedPreScroll(0, yDiff, scrollConsumed, scrollOffset)) {
                     yDiff -= scrollConsumed[1];
                     obtainedEv.offsetLocation(0, scrollOffset[1]);
+                    Log.i("webview", MessageFormat.format("yDiff = {0} scrollConsumed y {1}, scrollOffset y {2}", yDiff, scrollConsumed[1], scrollOffset[1]));
                 }
                 if (isBeingDragged) {
+                    Log.i("webview", MessageFormat.format("scrollY = {0}", scrollY));
                     lastTouchY = y - scrollOffset[1];
                     //ここのconsumedYには何を渡せば？
-                    if(dispatchNestedScroll(0, 0, 0, yDiff, scrollOffset)) {
+                    int consumedY = 0;
+                    if (isScrollingWebView) {
+                        consumedY = yDiff;
+                        yDiff = 0;
+                    }
+                    if(dispatchNestedScroll(0, consumedY, 0, yDiff, scrollOffset)) {
                         lastTouchY -= scrollOffset[1];
                         obtainedEv.offsetLocation(0, scrollOffset[1]);
                         nestedYOffset += scrollOffset[1];
@@ -118,11 +130,6 @@ public class SuperObservableWebView extends ObservableWebView implements NestedS
         }
         obtainedEv.recycle();
         return super.onTouchEvent(ev);
-//        Log.i("webview", "start touch " + ev.getActionMasked());
-//        boolean b = super.onTouchEvent(ev);
-//        Log.i("viewpager", "touch in setontouch");
-//        return b;
-
     }
 
     private void init() {
@@ -131,6 +138,25 @@ public class SuperObservableWebView extends ObservableWebView implements NestedS
         this.touchSlop = viewConfiguration.getScaledTouchSlop();
         setNestedScrollingEnabled(true);
 
+    }
+
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        Log.i("webview", MessageFormat.format("l = {0}, t = {1}, oldl = {2}, oldt = {3}", l, t, oldl, oldt));
+        super.onScrollChanged(l, t, oldl, oldt);
+    }
+
+    public void onChangeCollapseToolbar(boolean b, int dy) {
+        boolean W = getScrollY() == 0;
+        boolean A = b;
+        boolean S = 0 < dy;
+        if (W && !(A && S)) {
+            isScrollingWebView = false;
+        }
+        if (A && (S && W || !S && !W)) {
+            isScrollingWebView = true;
+        }
+        Log.i("webview", MessageFormat.format("toolbar collapsing is changed. {0} {1}", b, dy));
     }
 
     //NestedScrollingChild
@@ -183,5 +209,6 @@ public class SuperObservableWebView extends ObservableWebView implements NestedS
     public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
         return childHelper.dispatchNestedPreFling(velocityX, velocityY);
     }
+
 
 }
