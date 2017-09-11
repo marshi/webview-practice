@@ -44,9 +44,11 @@ public class SuperObservableWebView extends ObservableWebView implements NestedS
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.i("webview", "-----------------------");
         Log.i("webview", "start dispatch " + ev.getActionMasked());
         boolean b = super.dispatchTouchEvent(ev);
         Log.i("webview", "end dispatch " + b + " " + ev.getActionMasked());
+        Log.i("webview", "-----------------------");
         return b;
     }
 

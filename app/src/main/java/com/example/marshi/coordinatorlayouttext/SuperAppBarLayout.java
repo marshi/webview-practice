@@ -4,11 +4,9 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 
 /**
  *
@@ -37,29 +35,8 @@ public class SuperAppBarLayout extends AppBarLayout {
         public void onNestedScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child,
                 View target,
                 int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-            Toolbar toolbar = (Toolbar) child.findViewById(R.id.toolbar);
-            ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
-            int[] toolbarLocation = new int[2];
-            toolbar.getLocationOnScreen(toolbarLocation);
-            int[] targetLocation = new int[2];
-            target.getLocationOnScreen(targetLocation);
-            int toolbarBottomY = toolbarLocation[1] + toolbar.getHeight();
-            int[] appbarLocation = new int[2];
-            int nestedScrollViewTopY = targetLocation[1];
-            child.getLocationOnScreen(appbarLocation);
-            int appbarBottomY = child.getLayoutParams().height;
             Log.i("behavior", "onNestedScroll " + dxConsumed + " " + dyConsumed + " " + dxUnconsumed + " " + dyUnconsumed);
 
-            Log.i("behavior", "onNestedScroll " + toolbarBottomY + " " + nestedScrollViewTopY + appbarBottomY);
-            if (nestedScrollViewTopY <= toolbarBottomY) {
-                Log.i("behavior", "top");
-//                SuperNestedScrollView superNestedScrollView = (SuperNestedScrollView)target;
-//                superNestedScrollView.setDisallowInterceptTouchEvent(true);
-            } else if (appbarBottomY <= nestedScrollViewTopY) {
-                Log.i("behavior", "bottom");
-//                SuperNestedScrollView superNestedScrollView = (SuperNestedScrollView)target;
-//                superNestedScrollView.setDisallowInterceptTouchEvent(false);
-            }
 
             super.onNestedScroll( coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
         }

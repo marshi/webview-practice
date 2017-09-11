@@ -5,7 +5,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -26,17 +25,13 @@ public class SuperViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        Log.i("viewpager", "start intercept "+ ev.getActionMasked());
         boolean b = super.onInterceptTouchEvent(ev);
-        Log.i("viewpager", "end intercept "+ b + " " + ev.getActionMasked());
         return b;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        Log.i("viewpager", "start touch "+ ev.getActionMasked());
         boolean b = super.onTouchEvent(ev);
-        Log.i("viewpager", "end touch " + b + " " + ev.getActionMasked());
         return b;
     }
 
@@ -59,7 +54,6 @@ public class SuperViewPager extends ViewPager {
         ) {
             if (dependency instanceof AppBarLayout) {
                 AppBarLayout barLayout = (AppBarLayout)dependency;
-                Log.i("barlayout", "" + barLayout.getHeight());
             }
             return false;
         }
