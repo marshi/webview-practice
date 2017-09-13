@@ -71,16 +71,16 @@ public class SuperAppBarLayout extends AppBarLayout {
             SuperObservableWebView superObservableWebView = (SuperObservableWebView)target;
             if (nestedScrollViewTopY <= toolbarBottomY) {
 //                Log.i("behavior", "top");
+                this.isToolbarCollapsed = true;
                 if (isToolbarCollapsed) {
                     superObservableWebView.onChangeCollapseToolbar(true, dy);
                 }
-                this.isToolbarCollapsed = true;
             } else {
 //                Log.i("behavior", "not top");
+                this.isToolbarCollapsed = false;
                 if (!isToolbarCollapsed) {
                     superObservableWebView.onChangeCollapseToolbar(false, dy);
                 }
-                this.isToolbarCollapsed = false;
             }
             super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
         }
