@@ -31,7 +31,7 @@ public class SuperAppBarLayout extends AppBarLayout {
         @Override
         public boolean onDependentViewChanged(CoordinatorLayout parent, AppBarLayout child,
                 View dependency) {
-            Log.i("behavior", "onDependentViewChanged");
+//            Log.i("behavior", "onDependentViewChanged");
             return super.onDependentViewChanged(parent, child, dependency);
         }
 
@@ -39,7 +39,7 @@ public class SuperAppBarLayout extends AppBarLayout {
         public void onNestedScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child,
                 View target,
                 int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-            Log.i("behavior", "onNestedScroll " + dxConsumed + " " + dyConsumed + " " + dxUnconsumed + " " + dyUnconsumed);
+//            Log.i("behavior", "onNestedScroll " + dxConsumed + " " + dyConsumed + " " + dxUnconsumed + " " + dyUnconsumed);
 
 
             super.onNestedScroll( coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
@@ -48,7 +48,7 @@ public class SuperAppBarLayout extends AppBarLayout {
         @Override
         public boolean onStartNestedScroll(CoordinatorLayout parent, AppBarLayout child,
                 View directTargetChild, View target, int nestedScrollAxes) {
-            Log.i("behavior", "onStartNestedScroll");
+//            Log.i("behavior", "onStartNestedScroll");
             return super
                     .onStartNestedScroll(parent, child, directTargetChild, target,
                             nestedScrollAxes);
@@ -70,13 +70,13 @@ public class SuperAppBarLayout extends AppBarLayout {
 
             SuperObservableWebView superObservableWebView = (SuperObservableWebView)target;
             if (nestedScrollViewTopY <= toolbarBottomY) {
-                Log.i("behavior", "top");
+//                Log.i("behavior", "top");
                 if (isToolbarCollapsed) {
                     superObservableWebView.onChangeCollapseToolbar(true, dy);
                 }
                 this.isToolbarCollapsed = true;
             } else {
-                Log.i("behavior", "not top");
+//                Log.i("behavior", "not top");
                 if (!isToolbarCollapsed) {
                     superObservableWebView.onChangeCollapseToolbar(false, dy);
                 }
@@ -88,14 +88,12 @@ public class SuperAppBarLayout extends AppBarLayout {
         @Override
         public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, AppBarLayout abl,
                 View target) {
-            Log.i("behavior", "onStopNestedScroll");
             super.onStopNestedScroll(coordinatorLayout, abl, target);
         }
 
         @Override
         public boolean onNestedFling(CoordinatorLayout coordinatorLayout, AppBarLayout child,
                 View target, float velocityX, float velocityY, boolean consumed) {
-            Log.i("behavior", "onNestedFling");
             return super
                     .onNestedFling(coordinatorLayout, child, target, velocityX, velocityY,
                             consumed);
@@ -105,7 +103,6 @@ public class SuperAppBarLayout extends AppBarLayout {
         public boolean onMeasureChild(CoordinatorLayout parent, AppBarLayout child,
                 int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec,
                 int heightUsed) {
-            Log.i("behavior", "onMeasureChild");
             return super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed,
                     parentHeightMeasureSpec, heightUsed);
         }
@@ -113,20 +110,17 @@ public class SuperAppBarLayout extends AppBarLayout {
         @Override
         public boolean onLayoutChild(CoordinatorLayout parent, AppBarLayout abl,
                 int layoutDirection) {
-            Log.i("behavior", "onLayoutChild");
             return super.onLayoutChild(parent, abl, layoutDirection);
         }
 
         @Override
         public Parcelable onSaveInstanceState(CoordinatorLayout parent, AppBarLayout abl) {
-            Log.i("behavior", "onSaveInstanceState");
             return super.onSaveInstanceState(parent, abl);
         }
 
         @Override
         public void onRestoreInstanceState(CoordinatorLayout parent, AppBarLayout appBarLayout,
                 Parcelable state) {
-            Log.i("behavior", "onRestoreInstanceState");
             super.onRestoreInstanceState(parent, appBarLayout, state);
         }
     }
